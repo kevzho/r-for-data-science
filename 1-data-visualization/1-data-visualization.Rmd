@@ -1,6 +1,8 @@
 ---
 title: "1-data-visualization"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
@@ -26,7 +28,15 @@ dev.cur()
 # mapping argument -> always defined in aes() function
 # aes() function specify which variables to map to x & y axes
 
-ggplot(data = penguins, mapping = aes(x = flipper_len, y = body_mass))
+# We can also color code different traits in a table -> scaling
+
+ggplot(data = penguins, mapping = aes(x = flipper_len, y = body_mass)) + 
+  geom_point(mapping = aes(color = species, shape = species)) + # adds points to plot
+  #creates scatterplot, mapping different shape and color to each species.
+  geom_smooth(method = "lm") #linear regression
+
+
+
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
