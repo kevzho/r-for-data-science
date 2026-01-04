@@ -5,9 +5,11 @@ output:
     df_print: paged
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+Thank you to [R for Data Science (2e)](https://r4ds.hadley.nz/data-visualize.html) for this learning experience.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*.
+*Creator: Kevin Zhou*
+
+## Starting Out
 
 ```{r}
 # libs to import
@@ -33,20 +35,180 @@ dev.cur()
 ggplot(data = penguins, mapping = aes(x = flipper_len, y = body_mass)) + 
   geom_point(mapping = aes(color = species, shape = species)) + # adds points to plot
   #creates scatterplot, mapping different shape and color to each species.
-  geom_smooth(method = "lm") #linear regression
+  geom_smooth(method = "lm") +  #linear regression
+  labs( #improve labels on our graph by using this layer
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+  ) #+ 
+  #scale_color_colorblind() #making color palette color-blind proof
 
 
 
 ```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
+### 1.2 Exercises (Unfinished)
+##### 1. 
+344 Rows, 8 Columns
+```{r}
+dim(penguins)
 ```
+
+##### 2. 
+Denoting bill depth in milimeters
+
+##### 3. 
+* Slight negative linear correlation across all species. 
+* Within individual species, slight positive linear correlation between bill length and depth.
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = bill_len, y = bill_dep, color = species) #add color = species for
+  #linearization of individual species
+) + 
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+
+```
+
+##### 4. 
+
+Better choice of geom would be to find a quantifiable trait of penguins that spans across all species instead of putting a categorical variable that is the species in the x value. 
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = species, y = bill_dep) #add color = species for
+  #linearization of individual species
+) + 
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+```
+
+##### 5. 
+
+```{r}
+#ggplot(data = penguins) + 
+  #geom_point()
+```
+The above code gives an error because the x and the y-variables are not defined. 
+
+##### 6. 
+
+##### 7.
+
+##### 8. 
+
+##### 9.
+
+##### 10. 
+
+___
+
+## Visualizing Distributions
+
+Examining distribution of *categorical* variable species (3 categories)
+```{r}
+ggplot(penguins, aes(x = species)) +
+  geom_bar() #using bargraph for categorical variable
+```
+Examining distribution of *numerical/quantitative* variable body mass
+```{r}
+ggplot(penguins, aes(x = body_mass)) + 
+  geom_histogram(binwidth = 200) #binwidth (the width of each bar) should be a reasonable number
+```
+
+Alternatively, we can use a density plot. 
+```{r}
+ggplot(penguins, aes(x = body_mass)) +
+  geom_density()
+```
+
+### 1.4 Exercises
+
+##### 1. 
+Bars are sideways. 
+```{r}
+ggplot(penguins, aes(y = species)) + 
+  geom_bar()
+```
+
+##### 2. 
+One graph has the bars filled in as red, and the other graph the outline is red. 
+
+##### 3. 
+Designates number of bins, but overriden by binwidth. 
+
+##### 4. 
+A binwidth of around .1 should be sufficient in noticing patterns within the data.
+```{r}
+head(diamonds)
+
+ggplot(diamonds, aes(x = carat)) + 
+  geom_histogram(binwidth = .1)
+
+```
+___
+
+## Visualizing Relationships
+
+Box & density plot of our penguin data:
+```{r}
+#box
+ggplot(penguins, aes(x = species, y = body_mass)) +
+  geom_boxplot()
+#density
+ggplot(penguins, aes(x = body_mass, color = species, fill = species)) + #filling in the density plot for aesthetics
+  geom_density(alpha = 0.5, linewidth = 0.75) #transparency of .5
+```
+
+Stacked bar chart for looking at relationship between categoricla variables `island` and `species`.
+```{r}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill") #assigning "fill" makes it so that the plot becomes a percentage plot.
+```
+
+With 3 or more variables, things get a little tricky. 
+```{r}
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point(aes(color = species, shape = island)) #mapping color to different species,
+#and mapping the shape to the different islands. 
+```
+
+It's much easier to use *facets*, subplots that each display one subset of the data. 
+```{r}
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point(aes(color = species, shape = species)) +
+  facet_wrap(~island)
+```
+
+### 1.5 Exercises (Not Started)
+
+##### 1. 
+
+##### 2. 
+
+##### 3. 
+
+##### 4. 
+
+##### 5. 
+
+##### 6.
+
+##### 7.
+
+___
+
+## Saving plots
+
+* Use `ggsave()` to save plots. For example: 
+```{r}
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point()
+ggsave(filename = "penguin-plot.png")
+```
+
+### 1.6 Exercises
+
+##### 1. 
+
+##### 2. 
