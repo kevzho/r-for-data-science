@@ -1,0 +1,26 @@
+---
+title: "2-workflow-basics"
+output: html_document
+---
+
+Combining multiple elements into a vector with `c()`:
+```{r}
+fibonacci <- c(1, 1, 2, 3, 5, 8, 13) #assignment of vector to "fibonacci" variable
+```
+Performing basic arithmetic with vectors:
+```{r}
+fibonacci * 2
+fibonacci - 3
+```
+
+`seq(from = , to = )` creates a sequence from the parameter you put in `from = ` to the parameter you put in `to = `. However, you can omit the names of the arguments and just do `seq(x, y)` where x and y are the bounds. 
+
+### Exercises
+
+##### 1. 
+
+##### 2. 
+
+##### 3.
+
+##### 4.
