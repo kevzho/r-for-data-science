@@ -33,8 +33,8 @@ flights |> #the "pipe" is |>, which takes the thing on its left and passes it al
 
 ### dplyr verbs (rows)
 
-1. `filter(*condition*)` allows you to keep/filter rows based on values of the columns. For example, you could do this:
-```{r}
+##### 1. `filter(*condition*)` allows you to keep/filter rows based on values of the columns. For example, you could do this:
+```{r eval = FALSE}
 flights |>
   filter(dep_delay > 120) #think of it as a "WHERE" clause in SQL, where you are able to input a condition
 
@@ -42,23 +42,22 @@ jan_feb <- flights |> #save result in variable to save the dataframe
   filter(month %in% c(1, 2)) #you can use %in% clause when combining "|" and "==". Keeps rows where variable equals one of the values in the vector describes. 
 ```
 
-2. `arrange()` changes order of rows based off of the value of the columns. Within the parameter section, you can also specify `arrange(desc())` to order in a descending order. 
-```{r}
+##### 2. `arrange()` changes order of rows based off of the value of the columns. Within the parameter section, you can also specify `arrange(desc())` to order in a descending order. 
+```{r eval = FALSE}
 flights |> #sorts by year, month, day, then departure time
   arrange(year, month, day, dep_time)
 ```
 
-3. `distinct()` finds all unique rows in a dataset. Similar to the "DISTINCT" clause in SQL.
-```{r}
+##### 3. `distinct()` finds all unique rows in a dataset. Similar to the "DISTINCT" clause in SQL.
+```{r eval = FALSE}
 flights |>
   distinct(origin, dest, .keep_all = TRUE) #specifies which rows to find unique.
 #.keep_all preserves the other columns (without it, the dataframe would just be the 2 columns specified)
 ```
 
-### Exercises: 
+#### Exercises: 
 
-##### 1.
-```{r}
+```{r eval = FALSE}
 #1.1
 one_one <- flights |>
   filter(arr_delay >= 2)
@@ -97,20 +96,70 @@ print("six")
 head(one_six, n = 5)
 
 ```
-
-##### 2.
-
-##### 3.
-
-##### 4.
-
-##### 5.
-
-##### 6.
-
+___
 ### dplyr verbs (columns)
 
-1. `mutate()`
-2. `select()`
-3. `rename()`
+##### 1. `mutate()`: Adds new columns that are calculated from existing columns.
+```{r eval = FALSE}
+flights |>
+  mutate(
+    gain = dep_delay - arr_delay, #calculating gain and adding as column
+    speed = distance / air_time * 60 #calculating speed and adding as column
+    #.before = 1 #-> Optional if you want to add objects to left hand side, if not it will automatically add columns to the right hand side. 
+    #.after = day #-> can use a variable name as your position (here, adding columns after the "day" column)
+    #.keep = "used" #-> only keep columns that were involved or created in the mutate() step
+  )
+```
+##### 2. `select()`: Allows one to zoom in on a useful subset by only selecting specific columns.
+```{r eval = FALSE}
+flights |>
+  select(year, month, day)
+  #select(year:day) -> selects all columns between year and day, inclusive
+  #select(!year: day) -> Selects all columns except those from year to day (inclusive)
+  #select(where(is.character)) -> selects all columns that are characters
+```
+
+Other helper functions that can be used within `select()` include:
+
+- `starts_with("char")`: matches names that begin with "char"
+
+- `ends_with("char")`: same logic as `starts_with()`, searches for names that end with "char"
+
+- `contains("char")`: selects columns that contain "char" within the name
+
+- `num_range("x", 1:3)`: matches `x1`, `x2`, and `x3`
+
+
+##### 3. `rename()`: renames existing variables
+```{r eval = FALSE}
+flights |> 
+  rename(tail_num = tailnum)
+```
+
 4. `relocate()`
+```{r eval = FALSE}
+flights |> 
+  relocate(time_hour, air_time) #defaulted to move variables to front
+  #relocate(year:dep_time, .after = time_hour) -> can specify where to put them with .before and .after arguments, similar to mutate()
+  #relocate(starts_with("arr), .before = dep_time)
+```
+
+#### Exercises: 
+
+```{r eval = FALSE}
+
+```
+___
+### The Pipe
+By using "the pipe", which is "|>", it can make code easier to read, as we will not need to nest each function in the previous one.
+___
+### Groups
+
+##### 1. `group_by()`:
+##### 2. `summarize()`:
+##### 3. The slice functions:
+- `df |> slice_head(n = 1)`
+- `df |> slice_tail(n = 1)`
+- `df |> slice_min(x, n = 1)`
+- `df |> slice_max(x, n = 1)`
+- `df |> slice_sample(n = 1)`
