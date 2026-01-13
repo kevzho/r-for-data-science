@@ -7,6 +7,7 @@ output: html_document
 ```{r}
 library(nycflights13)
 library(tidyverse)
+library(dplyr)
 
 #flights is a tibble, a special type of dataframe used by tidyverse to avoid some common gotchas. 
 flights
@@ -147,19 +148,77 @@ flights |>
 #### Exercises: 
 
 ```{r eval = FALSE}
+#1. 
+#sched_dep_time - dep_time = dep_day
 
+#2. 
+flights |>
+  select(dep_time, dep_delay, arr_time, arr_delay)
+
+#3. Multiple items would appear or there would be an error.
+#4. any_of() selects variables contained in character vector. Doesn't check for missing vars, so 
+#won't throw error if some variables don't exist. 
+#5. 
+#6.
+flights |>
+  rename(air_time_min = air_time) |>
+  relocate(air_time_min)
+#7.
 ```
 ___
 ### The Pipe
 By using "the pipe", which is "|>", it can make code easier to read, as we will not need to nest each function in the previous one.
+
 ___
+
 ### Groups
 
-##### 1. `group_by()`:
-##### 2. `summarize()`:
+##### 1. `group_by()`: Divides dataset into groups, following operations will now work by whatever you're grouped by. 
+##### 2. `summarize()`: Reduces dataframe to have a single row for each group.
+
+The two functions above in action:
+
+```{r}
+flights |> 
+  group_by(month) |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), #ignores all missing values
+    n = n() #returns number of rows for each group
+  )
+
+```
+
+You can also group by multiple variables:
+```{r}
+daily <- flights |>
+  group_by(year, month, day) #groups by date
+
+daily
+```
+
+Summarizing a tibble grouped by more than one variable has each summary peeling of the last group. 
+
 ##### 3. The slice functions:
-- `df |> slice_head(n = 1)`
-- `df |> slice_tail(n = 1)`
-- `df |> slice_min(x, n = 1)`
-- `df |> slice_max(x, n = 1)`
-- `df |> slice_sample(n = 1)`
+- `df |> slice_head(n = 1)` takes the first row from each group.
+- `df |> slice_tail(n = 1)` takes the last row from each group.
+- `df |> slice_min(x, n = 1)` Takes the row with the smallest value of column `x`
+- `df |> slice_max(x, n = 1)` Takes the row with the largest value of column `x`
+- `df |> slice_sample(n = 1)` Takes one random row. 
+
+##### 4. `ungroup()`: Removes grouping data. 
+```{r}
+daily |> 
+  ungroup() |>
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n()
+    #.by = month
+    #.by = c(origin, dest) -> The .by argument can also group variables. 
+  )
+```
+
+#### Exercises: 
+
+```{r eval = FALSE}
+
+```

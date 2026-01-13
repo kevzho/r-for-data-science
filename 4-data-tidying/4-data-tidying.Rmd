@@ -1,0 +1,27 @@
+---
+title: "4-data-tidying"
+output: html_document
+---
+
+### Importing Libraries
+
+```{r}
+library(tidyverse)
+```
+
+### Rules that make a table tidy:
+- Each variable is a column
+- Each observation is a row
+- Each value is a cell
+
+#### Exercises
+
+1.
+
+2.
+
+3.
+
+___
+
+### Lengthening Data
