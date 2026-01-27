@@ -25,3 +25,27 @@ library(tidyverse)
 ___
 
 ### Lengthening Data
+
+We can use `pivot_longer()` to get rid of 
+
+```{r}
+billboard_longer <- billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"), #all columns starting with "wk" are gathered in one column
+    names_to = "week", #all of them become new column called week
+    values_to = "rank", #The values go into the new column called "rank
+    values_drop_na = TRUE
+  ) |> 
+  mutate(
+    week = parse_number(week) #parses "wk1", "wk2" into numeric week numbers
+  )
+
+billboard_longer
+```
+
+```{r}
+billboard_longer |> 
+  ggplot(aes(x = week, y = rank, group = track)) + 
+  geom_line(alpha = 0.25) + 
+  scale_y_reverse()
+```
