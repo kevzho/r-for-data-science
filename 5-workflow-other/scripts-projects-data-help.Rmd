@@ -7,4 +7,19 @@ output: html_document
 
 ```{r}
 library(tidyverse)
+
+#ggsave("__") - Saves Png file
+# write_csv(dataframe, "dir/file.csv"); - Saves csv file
 ```
+
+### Projects
+
+- To keep R scripts as the source of truth for analyses, instruct RStudio to NOT preserve your workspace betwen sessions. `uses_blank_slate()`
+- Use `getwd()` to get working directory. 
+
+### Reading files:
+
+```{r}
+# students <- read_csv("file.csv")
+```
+
